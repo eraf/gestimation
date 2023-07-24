@@ -1,6 +1,3 @@
-devtools::loaded_packages()
-devtools::load_all()
-
 ate <- function(r0, r1) {
   tibble::tibble(
     risk_difference = r1 - r0,
