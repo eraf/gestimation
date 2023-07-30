@@ -1,3 +1,17 @@
+#' Doubly robust estimator used to estimate effect
+#'
+#' @param data A data.frame containing all variables specified in the provided
+#'             `outcome_model` and `exposure_model`.
+#' @param exposure The exposure (i.e. treatment) variable.
+#' @param y The outcome variable.
+#' @param exposure_model The exposure model.
+#' @param outcome_model The outcome model.
+#' @param id The unique identifier of subjects.
+#'
+#' @return A tibble containing risks for exposure level 0 and 1, Risk Difference,
+#'         Risk ratio, Odds Ratio
+#' @export
+
 dr <- function(data, exposure = NULL, y = NULL,
                exposure_model = NULL, outcome_model = NULL,
                id = NULL) {

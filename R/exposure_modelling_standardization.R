@@ -10,6 +10,7 @@
 #'
 #' @return A tibble containing risks for exposure level 0 and 1, Risk Difference,
 #'         Risk ratio, Odds Ratio
+#' @export
 
 exposure_modeling_standardization <- function(data, exposure = NULL, y = NULL,
                                               exposure_model = NULL, outcome_model = NULL,

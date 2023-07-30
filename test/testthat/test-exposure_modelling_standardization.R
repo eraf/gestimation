@@ -17,7 +17,3 @@ exposure_modeling_standardization(data = brfss0,
 bootstrap_ci(df = brfss0, f = exposure_modeling_standardization,
   trtmod = exposure_mod, y = flushot)
 
-library(MatchIt)
-matched_data <- matchit(formula = insured ~ female + whitenh + blacknh + hisp + multinh +
-                        gthsedu + rural, data = brfss0,
-                        method = 'nearest')

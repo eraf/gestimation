@@ -14,3 +14,7 @@ Imports:
     magrittr,
     purrr,
     tidyr
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

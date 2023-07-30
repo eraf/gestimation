@@ -1,3 +1,21 @@
+#' Bootstrap confidence interval
+#'
+#' A function to calculate 95% confidence interval based on bootstrap
+#' method.
+#'
+#' @param df A data.frame containing all variables specified in the
+#'          provided formula.
+#' @param f The g-estimation method
+#' @param outmod The outcome model
+#' @param trtmod The exposure model
+#' @param x The exposure / treatment variable
+#' @param y The outcome variable
+#' @param id The unique identifier variable of subjects.
+#'
+#' @return A tibble containing bootstrap confidence intervals of
+#' risk difference, risk ratio and odds ratio
+#' @export
+
 bootstrap_ci <- function(df, f, outmod = NULL, trtmod = NULL,
               x = NULL, y = NULL, id = NULL) {
   rd <- rep(NA, 20)
