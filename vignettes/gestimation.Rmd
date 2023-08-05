@@ -14,7 +14,125 @@ knitr::opts_chunk$set(
 )
 ```
 
+Welcome to the 'gestimation' package vignette! This vignette provides an overview of the main functions offered by the 'gestimation' package, which is designed to facilitate effect estimation using 'g' method. The package offers three key functions: exposure_modelling_standardization, outcome_modelling_standardization, and dr (doubly robust estimator), along with a utility function bootstrap_ci for obtaining 95% bootstrap confidence intervals. Let's dive into each function and its usage. 
+
+### A unique advantage: 
+
+One of the standout features of the 'gestimation' package is its seamless integration with data manipulation, offering an experience similar to using popular 'dplyr' functions. While other packages may focus solely on estimation techniques, 'gestimation' goes a step further by providing users with the ability to manipulate their dataset effortlessly within the estimation workflow. This unique advantage sets 'gestimation' apart from its counterparts in the field.
+
+Please install and load the package 
+
 ```{r setup}
+devtools::install_github('eraf/gestimation')
 library(gestimation)
-help(dr)
+``` 
+
+## Exposure modelling based standardization 
+
+The exposure_modelling_standardization function calculates the effect of a binary exposure (treatment) on the outcome using the exposure-modeling approach. It takes the following inputs: 
+
+data: A data frame containing variables specified in the provided exposure_model.
+exposure_model: The exposure model.
+y: The outcome variable.
+The function returns a tibble containing risks for exposure levels 0 and 1, Risk Difference, Risk Ratio, and Odds Ratio. 
+
+```{r}
+#example using brfss data (included in the package)
+library(dplyr)
+
+brfss0 <- brfss %>% filter(gt65 == 0)
+
+
+exposure_mod <- glm(insured ~ female + whitenh + blacknh + hisp + multinh +
+                      gthsedu + rural, family = "binomial",data = brfss0)
+
+exposure_modeling_standardization(data = brfss0,
+                                  exposure_model =  exposure_mod,
+                                  y = flushot)
+``` 
+
+## Outcome Modeling Based Standardization 
+
+The outcome_modelling_standardization function calculates the effect of a binary exposure (treatment) on the outcome using the outcome-modeling approach. It takes the following inputs: 
+
+data: A data frame containing variables specified in the provided outcome_model.
+outcome_model: The outcome model.
+exposure: The exposure (treatment) variable.
+The function returns a tibble containing risks for exposure levels 0 and 1, Risk Difference, Risk Ratio, and Odds Ratio. 
+
+```{r}
+library(dplyr)
+
+brfss0 <- brfss %>% filter(gt65 == 0)
+
+outcome_mod <- glm(flushot ~ insured + female + whitenh + blacknh + hisp +
+                     multinh + gthsedu + rural, family = "binomial",
+                   data = brfss0)
+
+outcome_modeling_standardization(data = brfss0, outcome_model =  outcome_mod,
+                                 exposure =  insured)
+``` 
+
+## Doubly Robust Estimator 
+
+The dr function provides a doubly robust estimator to estimate the effect. It takes the following inputs: 
+
+data: A data frame containing variables specified in both the exposure_model and outcome_model.
+exposure: The exposure (treatment) variable.
+y: The outcome variable.
+exposure_model: The exposure model.
+outcome_model: The outcome model.
+id: The unique identifier of subjects.
+The function returns a tibble containing risks for exposure levels 0 and 1, Risk Difference, Risk Ratio, and Odds Ratio.
+
+```{r}
+library(dplyr)
+library(broom)
+brfss0 <- brfss %>% filter(gt65 == 0)
+
+exposure_mod <- glm(insured ~ female + whitenh + blacknh + hisp + multinh + gthsedu + rural, family = "binomial",data = brfss)
+outcome_mod <- glm(flushot ~ insured + female + whitenh + blacknh + hisp + multinh + gthsedu + rural, family = "binomial",
+                   data = brfss0)
+
+brfss0 %>%
+  mutate(id = row_number()) %>% 
+  dr(exposure = insured, y = flushot, outcome_model = outcome_mod, 
+     exposure_model = exposure_mod, id = "id")
+
 ```
+
+## Bootstrap Confidence Intervals 
+
+The bootstrap_ci function calculates bootstrap confidence intervals for the estimated effect. It takes the following inputs: 
+
+df: A data frame containing variables specified in the provided formula.
+f: The g-estimation method.
+outmod: The outcome model.
+trtmod: The exposure model.
+x: The exposure/treatment variable.
+y: The outcome variable.
+id: The unique identifier variable of subjects.
+The function returns a tibble containing bootstrap confidence intervals for Risk Difference, Risk Ratio, and Odds Ratio. 
+
+```{r}
+library(dplyr)
+library(broom)
+
+brfss0 <- brfss %>% filter(gt65 == 0)
+
+exposure_mod <- glm(insured ~ female + whitenh + blacknh + hisp + multinh + gthsedu + rural, family = "binomial",data = brfss)
+outcome_mod <- glm(flushot ~ insured + female + whitenh + blacknh + hisp + multinh + gthsedu + rural, family = "binomial", data = brfss0)
+
+bootstrap_ci(df = brfss0, f = exposure_modeling_standardization,
+  trtmod = exposure_mod, y = flushot)
+
+bootstrap_ci(df = brfss0, f = outcome_modeling_standardization,
+  outmod = outcome_mod, x = insured)
+
+brfss0 %>%
+  mutate(id = row_number()) %>% 
+  bootstrap_ci(f = dr, trtmod = exposure_mod, outmod = outcome_mod,
+  x = insured, y = flushot, id = 'id')
+
+``` 
+

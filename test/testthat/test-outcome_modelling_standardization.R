@@ -1,4 +1,3 @@
-load("C:/Users/erafh/gestimation/dataset/brfss.RData")
 library(dplyr)
 
 brfss0 <- brfss %>% filter(gt65 == 0)

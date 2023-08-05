@@ -1,0 +1,15 @@
+• The dataset brfss is constructed from the 2019 Behavorial Risk Factor Surveillance System (BRFSS) survey
+data, available at Cen- ters for Disease Control and Prevention (2020).
+• The BRFSS is a health-related telephone survey that collects data about U.S. residents aged 18 and over
+regarding their health-related risk behaviors, chronic health conditions, and use of preventive services.
+• The binary variables included in the complete case dataset brfss are
+– gt65 recording age greater than 65
+– female recording female
+– whitenh recording self-identification as white non-hispanic
+– blacknh recording self-identification as black non-hispanic
+– hisp recording self-identification as hispanic
+– multinh recording self-identification as multi-racial and non-hispanic
+– rural recording residence in a rural county
+– insured recording having health insurance
+– flushot recording a flushot within the past 12 months
+– gthsedu recording education greater than high school.
