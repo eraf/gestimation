@@ -136,3 +136,5 @@ brfss0 %>%
 
 ``` 
 
+In summary, the 'gestimation' package provides a suite of functions for effect estimation using 'g' method. You can choose between exposure modeling, outcome modeling, or a doubly robust estimator, and then obtain bootstrap confidence intervals for your estimates. We hope this vignette helps you effectively utilize the 'gestimation' package for your estimation needs.
+
